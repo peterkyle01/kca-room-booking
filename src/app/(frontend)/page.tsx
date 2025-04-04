@@ -1,15 +1,17 @@
 import Link from 'next/link'
-import { getRooms } from '@/app/server-actions/booking'
+import { getAllBookingStats, getRooms } from '@/app/server-actions/booking'
 import { Button } from '@/components/ui/button'
 import { FeaturedRooms } from '@/components/custom/featured-rooms'
 import { RoomCategories } from '@/components/custom/room-categories'
 import { HeroSearch } from '@/components/custom/hero-search'
 import { BookingStats } from '@/components/custom/booking-stats'
 import { ArrowRight, CalendarCheck, Clock, Users } from 'lucide-react'
+import HeroGeometric from '@/components/custom/hero-geometry'
 
 export default async function Home() {
   const rooms = await getRooms()
 
+  const bookingStats = await getAllBookingStats()
   // Get featured rooms (available rooms with images)
   const featuredRooms = rooms
     ? rooms
@@ -20,44 +22,9 @@ export default async function Home() {
   // Get room types for categories
   const roomTypes = rooms ? Array.from(new Set(rooms.map((room) => room['room type']))) : []
 
-  // Mock stats for demonstration
-  const mockStats = {
-    totalBookings: 120,
-    pendingBookings: 15,
-    approvedBookings: 95,
-    rejectedBookings: 10,
-    upcomingBookings: 25,
-  }
-
   return (
     <main>
-      {/* Hero Section */}
-      <section className="relative bg-white">
-        <div className="container mx-auto px-4 py-20 md:py-28">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Find the perfect space for your next meeting
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              Book conference rooms, study spaces, and event halls with just a few clicks
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/rooms">Browse All Rooms</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/bookings">My Bookings</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Search Component */}
-        <div className="container mx-auto px-4 -mt-6 md:-mt-10 relative z-10">
-          {/* @ts-expect-error no-type */}
-          <HeroSearch roomTypes={roomTypes} />
-        </div>
-      </section>
+      <HeroGeometric />
 
       {/* Featured Rooms */}
       <section className="bg-slate-50 py-20">
@@ -150,7 +117,7 @@ export default async function Home() {
           </p>
 
           <div className="max-w-4xl mx-auto">
-            <BookingStats stats={mockStats} />
+            <BookingStats stats={bookingStats} />
           </div>
         </div>
       </section>

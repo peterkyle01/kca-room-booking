@@ -36,6 +36,15 @@ export async function getBookings(userId: string) {
   return bookings || null
 }
 
+export async function getAllBookings() {
+  const payload = await getPayload({ config })
+  const { docs: bookings } = await payload.find({
+    collection: 'bookings',
+    depth: 2, // To populate the room relationship
+  })
+  return bookings || null
+}
+
 // Fixed to query the bookings collection
 export async function getOneBooking(bookingId: string) {
   const payload = await getPayload({ config })
@@ -57,17 +66,29 @@ export async function createBooking(data: {
   const payload = await getPayload({ config })
 
   try {
-    const booking = await payload.create({
-      collection: 'bookings',
-      data: {
-        user: Number(data.userId),
-        room: Number(data.roomId),
-        startTime: data.startTime,
-        endTime: data.endTime,
-        status: 'pending', // Default status for new bookings
-      },
-    })
-
+    const [booking, _] = await Promise.all([
+      payload.create({
+        collection: 'bookings',
+        data: {
+          user: Number(data.userId),
+          room: Number(data.roomId),
+          startTime: data.startTime,
+          endTime: data.endTime,
+          status: 'pending',
+        },
+      }),
+      payload.update({
+        collection: 'rooms',
+        where: {
+          id: {
+            equals: Number(data.roomId),
+          },
+        },
+        data: {
+          status: 'Booked',
+        },
+      }),
+    ])
     return { success: true, booking }
   } catch (error) {
     console.error('Error creating booking:', error)
@@ -239,4 +260,44 @@ export async function getCurrentUser() {
   const { user }: { user: User } = res
 
   return user
+}
+
+export async function getAllBookingStats() {
+  const payload = await getPayload({ config })
+
+  try {
+    // Get all bookings for the user
+    const { docs: bookings } = await payload.find({
+      collection: 'bookings',
+    })
+
+    // Calculate statistics
+    const totalBookings = bookings.length
+    const pendingBookings = bookings.filter((booking) => booking.status === 'pending').length
+    const approvedBookings = bookings.filter((booking) => booking.status === 'approved').length
+    const rejectedBookings = bookings.filter((booking) => booking.status === 'rejected').length
+
+    // Get upcoming bookings (approved bookings with start time in the future)
+    const now = new Date()
+    const upcomingBookings = bookings.filter((booking) => {
+      return booking.status === 'approved' && new Date(booking.startTime) > now
+    }).length
+
+    return {
+      totalBookings,
+      pendingBookings,
+      approvedBookings,
+      rejectedBookings,
+      upcomingBookings,
+    }
+  } catch (error) {
+    console.error('Error fetching user booking stats:', error)
+    return {
+      totalBookings: 0,
+      pendingBookings: 0,
+      approvedBookings: 0,
+      rejectedBookings: 0,
+      upcomingBookings: 0,
+    }
+  }
 }

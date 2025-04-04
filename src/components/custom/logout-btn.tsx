@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { signOutUser } from '@/app/server-actions/user'
 import { User } from '@/payload-types'
+import Link from 'next/link'
 
 export default function LogoutBtn(user: User) {
   const router = useRouter()
@@ -13,11 +14,13 @@ export default function LogoutBtn(user: User) {
   return (
     <>
       {user.firstname ? (
-        <div className="rounded-full bg-gray-200 p-2 border ">
-          <span className="text-sm font-bold">
-            {user.firstname.charAt(0).toUpperCase() + '.' + user.lastname.charAt(0).toUpperCase()}
-          </span>
-        </div>
+        <Link href={'/profile'}>
+          <div className="rounded-full bg-gray-200 p-2 border ">
+            <span className="text-sm font-bold">
+              {user.firstname.charAt(0).toUpperCase() + '.' + user.lastname.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        </Link>
       ) : (
         <p className="text-xs md:text-base font-bold">ADMIN</p>
       )}

@@ -18,7 +18,7 @@ export default async function ProfilePage() {
   const currentUser = await getCurrentUser()
 
   if (!currentUser) {
-    redirect('/login')
+    redirect('/sign-in')
   }
 
   const userProfile = await getUserProfile(currentUser.id)
@@ -112,7 +112,7 @@ export default async function ProfilePage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/" className="text-sm text-primary hover:underline">
+                    <Link href="/rooms" className="text-sm text-primary hover:underline">
                       Browse Rooms
                     </Link>
                   </li>

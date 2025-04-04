@@ -1,7 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Cog, LogOut } from 'lucide-react'
-import Link from 'next/link'
 
 interface ProfileHeaderProps {
   user: any
@@ -43,19 +40,6 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             </span>
           </div>
         )}
-      </div>
-
-      <div className="flex gap-2 mt-4 md:mt-0">
-        <Link href="/settings">
-          <Button variant="outline" size="sm">
-            <Cog className="h-4 w-4 mr-2" />
-            Settings
-          </Button>
-        </Link>
-        <Button variant="outline" size="sm">
-          <LogOut className="h-4 w-4 mr-2" />
-          Sign Out
-        </Button>
       </div>
     </div>
   )

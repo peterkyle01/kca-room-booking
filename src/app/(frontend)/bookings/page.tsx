@@ -14,7 +14,7 @@ export default async function BookingsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Your Bookings</h1>
           <p className="text-muted-foreground mt-1">Manage your room bookings and reservations</p>
         </div>
-        <Link href="/" className="mt-4 md:mt-0">
+        <Link href="/rooms" className="mt-4 md:mt-0">
           <Button>Browse Rooms</Button>
         </Link>
       </div>

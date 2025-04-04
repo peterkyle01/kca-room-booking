@@ -162,7 +162,7 @@ export function BookingsList({ bookings }: BookingsListProps) {
     <div className="text-center py-12 bg-muted/30 rounded-lg">
       <h3 className="text-lg font-medium mb-2">No bookings found</h3>
       <p className="text-muted-foreground mb-4">{message}</p>
-      <Link href="/">
+      <Link href="/rooms">
         <Button>Browse Rooms</Button>
       </Link>
     </div>

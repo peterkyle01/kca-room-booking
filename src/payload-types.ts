@@ -69,7 +69,6 @@ export interface Config {
   collections: {
     rooms: Room;
     bookings: Booking;
-    reports: Report;
     'contact-us': ContactUs;
     users: User;
     media: Media;
@@ -81,7 +80,6 @@ export interface Config {
   collectionsSelect: {
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     bookings: BookingsSelect<false> | BookingsSelect<true>;
-    reports: ReportsSelect<false> | ReportsSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -137,7 +135,7 @@ export interface Room {
       }[]
     | null;
   'room type'?: ('Conference Room' | 'Study Room' | 'Event Hall' | 'Classroom') | null;
-  status: 'Available' | 'Booked';
+  status: 'Available' | 'Booked' | 'Maintainance';
   facilities?:
     | {
         facility?: string | null;
@@ -208,26 +206,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "reports".
- */
-export interface Report {
-  id: number;
-  reportType: 'User Activity' | 'Room Usage' | 'Booking Trends';
-  generatedAt: string;
-  data?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-us".
  */
 export interface ContactUs {
@@ -253,10 +231,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'bookings';
         value: number | Booking;
-      } | null)
-    | ({
-        relationTo: 'reports';
-        value: number | Report;
       } | null)
     | ({
         relationTo: 'contact-us';
@@ -353,17 +327,6 @@ export interface BookingsSelect<T extends boolean = true> {
   startTime?: T;
   endTime?: T;
   status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "reports_select".
- */
-export interface ReportsSelect<T extends boolean = true> {
-  reportType?: T;
-  generatedAt?: T;
-  data?: T;
   updatedAt?: T;
   createdAt?: T;
 }

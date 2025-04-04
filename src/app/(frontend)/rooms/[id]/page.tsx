@@ -9,8 +9,9 @@ import { RoomTypeDetails } from '@/components/custom/room-type-details'
 import { BookingForm } from '@/components/custom/booking-form'
 import { getCurrentUser, getOneRoom } from '@/app/server-actions/booking'
 
-export default async function RoomPage({ params }: { params: { id: string } }) {
-  const roomId = parseInt(params.id)
+export default async function RoomPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const roomId = parseInt(id)
 
   if (isNaN(roomId)) {
     notFound()
@@ -98,7 +99,7 @@ export default async function RoomPage({ params }: { params: { id: string } }) {
         {room.status === 'Available' && (
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Book This Room</h2>
-            <BookingForm room={room} userId={currentUser.id.toString()} />
+            <BookingForm room={room} userId={currentUser?.id.toString()} />
           </Card>
         )}
 

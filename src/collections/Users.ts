@@ -4,6 +4,9 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'email',
+    components: {
+      beforeList: ['/components/custom/users-admin-component'],
+    },
   },
   auth: true,
   access: {

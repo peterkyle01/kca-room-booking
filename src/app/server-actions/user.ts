@@ -23,6 +23,12 @@ export async function getUser() {
   return user
 }
 
+export async function getUsers() {
+  const payload = await getPayload({ config })
+  const { docs: users } = await payload.find({ collection: 'users' })
+  return users
+}
+
 export async function signUpUser(formData: SignUpFormData) {
   // Validate form data
   const validatedData = signUpFormSchema.parse(formData)

@@ -9,6 +9,9 @@ export const ContactUs: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     hideAPIURL: true,
+    components: {
+      beforeList: ['/components/custom/message-admin-component'],
+    },
   },
   access: {
     create: () => true,

@@ -19,3 +19,11 @@ export async function getOneRoom(roomId: string) {
   })
   return room || null
 }
+
+export async function getMessages() {
+  const payload = await getPayload({ config })
+  const { docs: rooms } = await payload.find({
+    collection: 'contact-us',
+  })
+  return rooms || null
+}

@@ -13,7 +13,7 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground mb-4">You don't have any bookings yet.</p>
-        <Link href="/">
+        <Link href="/rooms">
           <Button>Browse Rooms</Button>
         </Link>
       </div>
