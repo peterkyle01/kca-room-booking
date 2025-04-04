@@ -150,47 +150,6 @@ export function RoomsDisplay({ initialRooms, initialFilters }: RoomsDisplayProps
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Room Explorer</h1>
-          <p className="text-muted-foreground mt-1">
-            Find and book the perfect room for your needs
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-                  <SlidersHorizontal className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{showFilters ? 'Hide filters' : 'Show filters'}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                >
-                  {viewMode === 'grid' ? (
-                    <List className="h-4 w-4" />
-                  ) : (
-                    <Grid className="h-4 w-4" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{viewMode === 'grid' ? 'List view' : 'Grid view'}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </div>
-
       {/* Filters */}
       <AnimatePresence>
         {showFilters && (
@@ -207,6 +166,26 @@ export function RoomsDisplay({ initialRooms, initialFilters }: RoomsDisplayProps
                     <CardTitle>Filters</CardTitle>
                     <CardDescription>Refine your search with these filters</CardDescription>
                   </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                        >
+                          {viewMode === 'grid' ? (
+                            <List className="h-4 w-4" />
+                          ) : (
+                            <Grid className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {viewMode === 'grid' ? 'List view' : 'Grid view'}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   {hasActiveFilters && (
                     <Button
                       variant="ghost"

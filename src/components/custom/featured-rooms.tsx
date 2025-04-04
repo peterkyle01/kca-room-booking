@@ -19,7 +19,7 @@ export function FeaturedRooms({ rooms }: FeaturedRoomsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {rooms.map((room) => {
         // Get the first image if available
         const imageUrl =
@@ -40,7 +40,7 @@ export function FeaturedRooms({ rooms }: FeaturedRoomsProps) {
               />
             </div>
 
-            <CardContent className="pt-6">
+            <CardContent className="pt-4">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-semibold text-lg">{room.name}</h3>
                 <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">

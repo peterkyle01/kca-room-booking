@@ -25,15 +25,7 @@ export default async function RoomPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="container mx-auto py-10 px-4 max-w-5xl">
-      <Link
-        href="/"
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to all rooms
-      </Link>
-
+    <div className="container mx-auto  px-4 max-w-5xl">
       <div className="space-y-8">
         {/* Room header with name and status */}
         <div className="flex flex-col md:flex-row md:items-center justify-between">

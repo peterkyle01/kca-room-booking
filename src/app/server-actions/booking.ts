@@ -148,15 +148,33 @@ export async function checkRoomAvailability(roomId: string, date: string) {
   }
 }
 
-// New action to cancel a booking
 export async function cancelBooking(bookingId: string) {
   const payload = await getPayload({ config })
 
   try {
-    await payload.delete({
+    const booking = await payload.findByID({
       collection: 'bookings',
       id: bookingId,
     })
+
+    const roomId = booking.room?.id
+    if (!roomId) {
+      throw new Error('No room ID found in booking')
+    }
+
+    await Promise.all([
+      payload.update({
+        collection: 'rooms',
+        id: roomId,
+        data: {
+          status: 'Available',
+        },
+      }),
+      payload.delete({
+        collection: 'bookings',
+        id: bookingId,
+      }),
+    ])
 
     return { success: true }
   } catch (error) {
