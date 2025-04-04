@@ -7,8 +7,23 @@ export const Rooms: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     { name: 'capacity', type: 'number', required: true },
     { name: 'location', type: 'text', required: true },
-    { name: 'availableTimes', type: 'array', fields: [{ name: 'time', type: 'text' }] },
-    { name: 'status', type: 'select', options: ['available', 'booked'], required: true },
+    {
+      name: 'availableTimes',
+      type: 'array',
+      fields: [
+        {
+          name: 'time',
+          type: 'date',
+          admin: { date: { pickerAppearance: 'timeOnly', displayFormat: 'h:mm:ss a' } },
+        },
+      ],
+    },
+    {
+      name: 'room type',
+      type: 'select',
+      options: ['Conference Room', 'Study Room', 'Event Hall', 'Classroom'],
+    },
+    { name: 'status', type: 'select', options: ['Available', 'Booked'], required: true },
     { name: 'facilities', type: 'array', fields: [{ name: 'facility', type: 'text' }] },
     {
       name: 'images',

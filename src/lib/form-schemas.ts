@@ -40,3 +40,11 @@ export const reviewSchema = z.object({
 })
 
 export type ReviewFormValues = z.infer<typeof reviewSchema>
+
+export const roomSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  capacity: z.coerce.number().min(1, { message: "Capacity must be at least 1" }),
+  location: z.string().min(2, { message: "Location is required" }),
+  roomType: z.enum(["Conference Room", "Study Room", "Event Hall", "Classroom"]),
+  status: z.enum(["Available", "Booked"]),
+})

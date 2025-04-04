@@ -136,7 +136,8 @@ export interface Room {
         id?: string | null;
       }[]
     | null;
-  status: 'available' | 'booked';
+  'room type'?: ('Conference Room' | 'Study Room' | 'Event Hall' | 'Classroom') | null;
+  status: 'Available' | 'Booked';
   facilities?:
     | {
         facility?: string | null;
@@ -325,6 +326,7 @@ export interface RoomsSelect<T extends boolean = true> {
         time?: T;
         id?: T;
       };
+  'room type'?: T;
   status?: T;
   facilities?:
     | T

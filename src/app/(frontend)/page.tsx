@@ -1,327 +1,172 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import { getRooms } from '@/app/server-actions/booking'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { CalendarIcon, CheckCircle, Clock, MapPin, Search, Star, Users } from 'lucide-react'
+import { FeaturedRooms } from '@/components/custom/featured-rooms'
+import { RoomCategories } from '@/components/custom/room-categories'
+import { HeroSearch } from '@/components/custom/hero-search'
+import { BookingStats } from '@/components/custom/booking-stats'
+import { ArrowRight, CalendarCheck, Clock, Users } from 'lucide-react'
 
-export default function HomePage() {
+export default async function Home() {
+  const rooms = await getRooms()
+
+  // Get featured rooms (available rooms with images)
+  const featuredRooms = rooms
+    ? rooms
+        .filter((room) => room.status === 'Available' && room.images && room.images.length > 0)
+        .slice(0, 3)
+    : []
+
+  // Get room types for categories
+  const roomTypes = rooms ? Array.from(new Set(rooms.map((room) => room['room type']))) : []
+
+  // Mock stats for demonstration
+  const mockStats = {
+    totalBookings: 120,
+    pendingBookings: 15,
+    approvedBookings: 95,
+    rejectedBookings: 10,
+    upcomingBookings: 25,
+  }
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Find Your Perfect Room in Seconds
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    KCA Room Booking makes it easy to find and book the perfect room for your needs,
-                    whether its for a meeting, event, or study session.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" asChild>
-                    <Link href="#">Get Started</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link href="#">Learn More</Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="mx-auto w-full max-w-sm space-y-2 bg-background p-4 rounded-xl shadow-lg">
-                <div className="text-center font-semibold text-lg mb-4">Quick Search</div>
-                <div className="space-y-4">
-                  <div className="grid w-full items-center gap-1.5">
-                    <label
-                      htmlFor="location"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Location
-                    </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="location" placeholder="Campus or building" className="pl-8" />
-                    </div>
-                  </div>
-                  <div className="grid w-full gap-1.5">
-                    <label htmlFor="date" className="text-sm font-medium leading-none">
-                      Date
-                    </label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          <span>Pick a date</span>
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <div className="grid w-full items-center gap-1.5">
-                    <label
-                      htmlFor="capacity"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Capacity
-                    </label>
-                    <div className="relative">
-                      <Users className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="capacity"
-                        type="number"
-                        placeholder="Number of people"
-                        className="pl-8"
-                      />
-                    </div>
-                  </div>
-                  <Button className="w-full" size="lg">
-                    <Search className="mr-2 h-4 w-4" /> Search Rooms
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Features</div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Everything You Need
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our platform offers a comprehensive set of features to make room booking simple
-                  and efficient.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
-              <div className="grid gap-2 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                  <Search className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-bold">Easy Search</h3>
-                <p className="text-muted-foreground">
-                  Find the perfect room with our powerful search filters and intuitive interface.
-                </p>
-              </div>
-              <div className="grid gap-2 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                  <Clock className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-bold">Real-time Availability</h3>
-                <p className="text-muted-foreground">
-                  See room availability in real-time and book instantly without waiting for
-                  confirmation.
-                </p>
-              </div>
-              <div className="grid gap-2 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                  <CheckCircle className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-bold">Instant Confirmation</h3>
-                <p className="text-muted-foreground">
-                  Receive immediate booking confirmations and reminders for your upcoming
-                  reservations.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="rooms" className="w-full py-12 md:py-24 lg:py-32 bg-muted/40">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Rooms</div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Popular Room Types
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Browse our selection of rooms designed to meet your specific needs.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl gap-8 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=300&width=400"
-                  width={400}
-                  height={300}
-                  alt="Conference Room"
-                  className="object-cover w-full h-48"
-                />
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold">Conference Room</h3>
-                    <Badge>Popular</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Perfect for meetings and presentations with full AV equipment.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Up to 20 people</span>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=300&width=400"
-                  width={400}
-                  height={300}
-                  alt="Study Room"
-                  className="object-cover w-full h-48"
-                />
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold">Study Room</h3>
-                    <Badge variant="outline">Quiet Zone</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Quiet space for individual or small group study sessions.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      <span className="text-sm">1-4 people</span>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=300&width=400"
-                  width={400}
-                  height={300}
-                  alt="Event Hall"
-                  className="object-cover w-full h-48"
-                />
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold">Event Hall</h3>
-                    <Badge variant="secondary">Spacious</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Large space for events, seminars, and large gatherings.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Up to 100 people</span>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="flex justify-center">
-              <Button size="lg" variant="outline">
-                View All Rooms
+    <main>
+      {/* Hero Section */}
+      <section className="relative bg-white">
+        <div className="container mx-auto px-4 py-20 md:py-28">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+              Find the perfect space for your next meeting
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              Book conference rooms, study spaces, and event halls with just a few clicks
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild>
+                <Link href="/rooms">Browse All Rooms</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/bookings">My Bookings</Link>
               </Button>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-                  Testimonials
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  What Our Users Say
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Dont just take our word for it. Heres what people are saying about KCA Room
-                  Booking.
-                </p>
-              </div>
+        {/* Search Component */}
+        <div className="container mx-auto px-4 -mt-6 md:-mt-10 relative z-10">
+          {/* @ts-expect-error no-type */}
+          <HeroSearch roomTypes={roomTypes} />
+        </div>
+      </section>
+
+      {/* Featured Rooms */}
+      <section className="bg-slate-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-baseline mb-12">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Featured Spaces</h2>
+              <p className="text-muted-foreground">Discover our most popular rooms</p>
             </div>
-            <div className="mx-auto grid max-w-5xl gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                      ))}
-                    </div>
-                    <p className="text-sm leading-relaxed">
-                      KCA Room Booking made it so easy to find and book a study room for my group
-                      project. The interface is intuitive and the confirmation was instant.
-                    </p>
-                    <div className="font-semibold">Sarah Johnson</div>
-                    <div className="text-xs text-muted-foreground">Student</div>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                      ))}
-                    </div>
-                    <p className="text-sm leading-relaxed">
-                      As a faculty member, I appreciate how simple it is to reserve rooms for
-                      classes and meetings. The calendar view makes it easy to see availability at a
-                      glance.
-                    </p>
-                    <div className="font-semibold">Dr. Michael Chen</div>
-                    <div className="text-xs text-muted-foreground">Professor</div>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${i < 4 ? 'fill-primary text-primary' : ''}`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-sm leading-relaxed">
-                      We used KCA Room Booking to reserve the event hall for our clubs annual
-                      showcase. The process was seamless and the space was exactly as described.
-                    </p>
-                    <div className="font-semibold">Alex Rodriguez</div>
-                    <div className="text-xs text-muted-foreground">Student Club President</div>
-                  </div>
-                </div>
-              </Card>
+            <Link
+              href="/rooms"
+              className="group flex items-center text-primary font-medium mt-4 md:mt-0"
+            >
+              View all rooms
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          <FeaturedRooms rooms={featuredRooms} />
+        </div>
+      </section>
+
+      {/* Room Categories */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-2">Find Rooms by Type</h2>
+          <p className="text-muted-foreground text-center mb-12">
+            Choose the perfect space for your specific needs
+          </p>
+          {/* @ts-expect-error no-type */}
+          <RoomCategories roomTypes={roomTypes} rooms={rooms || []} />
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="bg-slate-50 py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-2">
+            Why Choose Our Platform
+          </h2>
+          <p className="text-muted-foreground text-center mb-12">
+            Simple, efficient, and reliable room booking
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <Clock className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Quick Booking</h3>
+              <p className="text-muted-foreground">
+                Reserve your room in seconds with our streamlined booking process. No complicated
+                forms or waiting.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Diverse Spaces</h3>
+              <p className="text-muted-foreground">
+                From intimate study rooms to large event halls, find the perfect space for any
+                occasion or group size.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-lg shadow-sm">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <CalendarCheck className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Real-time Availability</h3>
+              <p className="text-muted-foreground">
+                See up-to-date availability for all rooms and get instant confirmation for your
+                bookings.
+              </p>
             </div>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="py-20 border-t">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-2">
+            Our Platform in Numbers
+          </h2>
+          <p className="text-muted-foreground text-center mb-12">
+            Join hundreds of satisfied users who trust our booking system
+          </p>
+
+          <div className="max-w-4xl mx-auto">
+            <BookingStats stats={mockStats} />
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-primary text-primary-foreground py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to book your first room?</h2>
+          <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
+            Get started today and experience the easiest way to book and manage room reservations.
+          </p>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/rooms">Browse Available Rooms</Link>
+          </Button>
+        </div>
+      </section>
+    </main>
   )
 }
