@@ -156,7 +156,7 @@ export async function cancelBooking(bookingId: string) {
       collection: 'bookings',
       id: bookingId,
     })
-
+    // @ts-expect-error no-type
     const roomId = booking.room?.id
     if (!roomId) {
       throw new Error('No room ID found in booking')

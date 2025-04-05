@@ -251,6 +251,7 @@ export function RoomsDisplay({ initialRooms, initialFilters }: RoomsDisplayProps
                         <SelectItem value="all">All statuses</SelectItem>
                         <SelectItem value="Available">Available</SelectItem>
                         <SelectItem value="Booked">Booked</SelectItem>
+                        <SelectItem value="Maintainance">Maintainance</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

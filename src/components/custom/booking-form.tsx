@@ -29,6 +29,7 @@ import { CalendarIcon, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createBooking, checkRoomAvailability } from '@/app/server-actions/booking'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import Link from 'next/link'
 
 const bookingSchema = z.object({
   date: z.date({
@@ -182,12 +183,12 @@ export function BookingForm({ room, userId }: BookingFormProps) {
           </Alert>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full">
                 <FormLabel>Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -229,7 +230,7 @@ export function BookingForm({ room, userId }: BookingFormProps) {
             control={form.control}
             name="startTime"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Start Time</FormLabel>
                 <Select
                   disabled={!selectedDate || isCheckingAvailability || availableTimes.length === 0}
@@ -293,14 +294,23 @@ export function BookingForm({ room, userId }: BookingFormProps) {
             )}
           />
         </div>
-
-        <Button
-          type="submit"
-          className="w-full md:w-auto"
-          disabled={isSubmitting || !form.formState.isValid}
-        >
-          {isSubmitting ? 'Submitting...' : 'Book Room'}
-        </Button>
+        <div className="w-full flex justify-center">
+          {!userId ? (
+            <Button asChild>
+              <Link href={'/sign-in'} className="w-60">
+                Sign In
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-60"
+              disabled={isSubmitting || !form.formState.isValid}
+            >
+              {isSubmitting ? 'Submitting...' : 'Book Room'}
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   )
